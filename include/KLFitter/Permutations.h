@@ -54,6 +54,11 @@ class Permutations {
   Permutations(KLFitter::Particles** p, KLFitter::Particles** pp);
 
   /**
+    * Copy constructor
+    */
+  Permutations(const Permutations& obj);
+
+  /**
     * The default destructor.
     */
   virtual ~Permutations();
