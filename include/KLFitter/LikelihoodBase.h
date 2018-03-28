@@ -55,6 +55,7 @@ class LikelihoodBase : public BCModel {
     kVetoNoFit,
     kVetoNoFitLight,
     kVetoNoFitBoth,
+    kVetoHybridNoFit,
     kWorkingPoint,
     kVetoLight,
     kVetoBoth

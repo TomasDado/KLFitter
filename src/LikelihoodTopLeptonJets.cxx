@@ -340,7 +340,7 @@ int KLFitter::LikelihoodTopLeptonJets::RemoveForbiddenParticlePermutations() {
   int err = 1;
 
   // only in b-tagging type kVetoNoFit
-  if (!((fBTagMethod == kVetoNoFit) || (fBTagMethod == kVetoNoFitLight) || (fBTagMethod == kVetoNoFitBoth)))
+  if (!((fBTagMethod == kVetoNoFit)||(fBTagMethod == kVetoNoFitLight)||(fBTagMethod == kVetoNoFitBoth)||(fBTagMethod == kVetoHybridNoFit)))
     return err;
 
   // remove all permutations where a b-tagged jet is in the position of a model light quark
@@ -349,11 +349,36 @@ int KLFitter::LikelihoodTopLeptonJets::RemoveForbiddenParticlePermutations() {
 
   KLFitter::Particles * particlesModel = fParticlesModel;
   int nPartonsModel = particlesModel->NPartons();
+  // When using kVetoHybridNoFit option we need to create a deep copy of Permutations object
+  // Then we remove permutations that are forbidden by 'kVetoNoFit' option
+  // if zero permutations are left, we need to run on original Permutations with 'kVetoLightNoFit'
+  if (fBTagMethod == kVetoHybridNoFit){
+    KLFitter::Permutations permutationsCopy(**fPermutations);
+    for (int iParton(0); iParton < nPartons; ++iParton) {
+      bool isBtagged = particles->IsBTagged(iParton);
+
+      for (int iPartonModel(0); iPartonModel < nPartonsModel; ++iPartonModel) {
+        KLFitter::Particles::TrueFlavorType trueFlavor = particlesModel->TrueFlavor(iPartonModel);
+        if ((!isBtagged)||(trueFlavor != KLFitter::Particles::kLight))
+          continue;
+        err *= (*fPermutations)->RemoveParticlePermutations(KLFitter::Particles::kParton, iParton, iPartonModel);
+      }
+    }
+
+    if ((*fPermutations)->NPermutations() != 0) {
+      return err;
+    } else {
+      **fPermutations = permutationsCopy;
+    }
+  }
+
   for (int iParton(0); iParton < nPartons; ++iParton) {
     bool isBtagged = particles->IsBTagged(iParton);
 
     for (int iPartonModel(0); iPartonModel < nPartonsModel; ++iPartonModel) {
       KLFitter::Particles::TrueFlavorType trueFlavor = particlesModel->TrueFlavor(iPartonModel);
+      if ((fBTagMethod == kVetoHybridNoFit)&&((isBtagged) || (trueFlavor != KLFitter::Particles::kB)))
+        continue;
       if ((fBTagMethod == kVetoNoFit)&&((!isBtagged) || (trueFlavor != KLFitter::Particles::kLight)))
         continue;
       if ((fBTagMethod == kVetoNoFitLight)&&((isBtagged) || (trueFlavor != KLFitter::Particles::kB)))
