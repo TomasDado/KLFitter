@@ -83,6 +83,49 @@ KLFitter::Permutations::~Permutations() {
 }
 
 // ---------------------------------------------------------
+KLFitter::Permutations& KLFitter::Permutations::operator=(const KLFitter::Permutations& obj) {
+  fParticles = obj.fParticles;
+  fParticlesPermuted = obj.fParticlesPermuted;
+  fPermutationIndex = obj.fPermutationIndex;
+
+  fParticlesTable = new std::vector<KLFitter::Particles*>(0);
+  for (const auto& ivec : *obj.fParticlesTable) {
+    fParticlesTable->emplace_back(new KLFitter::Particles(*ivec));
+  }
+
+  fPermutationTable = new std::vector<std::vector<int>*>(0);
+  for (const auto& ivec : *obj.fPermutationTable) {
+    std::vector<int> *tmp = new std::vector<int>(*ivec);
+    fPermutationTable->emplace_back(tmp);
+  }
+
+  fTablePartons = new std::vector<std::vector<int>*>(0);
+  for (const auto& ivec : *obj.fTablePartons) {
+    std::vector<int> *tmp = new std::vector<int>(*ivec);
+    fTablePartons->emplace_back(tmp);
+  }
+
+  fTableElectrons = new std::vector<std::vector<int>*>(0);
+  for (const auto& ivec : *obj.fTableElectrons) {
+    std::vector<int> *tmp = new std::vector<int>(*ivec);
+    fTableElectrons->emplace_back(tmp);
+  }
+
+  fTableMuons = new std::vector<std::vector<int>*>(0);
+  for (const auto& ivec : *obj.fTableMuons) {
+    std::vector<int> *tmp = new std::vector<int>(*ivec);
+    fTableMuons->emplace_back(tmp);
+  }
+
+  fTablePhotons = new std::vector<std::vector<int>*>(0);
+  for (const auto& ivec : *obj.fTablePhotons) {
+    std::vector<int> *tmp = new std::vector<int>(*ivec);
+    fTablePhotons->emplace_back(tmp);
+  }
+  return *this;
+}
+
+// ---------------------------------------------------------
 int KLFitter::Permutations::SetPermutation(int index) {
   // check if permutation table exists
   if (!fParticlesTable) {

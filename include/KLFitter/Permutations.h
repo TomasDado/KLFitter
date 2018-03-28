@@ -63,6 +63,11 @@ class Permutations {
     */
   virtual ~Permutations();
 
+  /**
+    * Assignment operator
+    */
+  Permutations& operator=(const Permutations& obj);
+
   /* @} */
   /** \name Member functions (Get)  */
   /* @{ */
