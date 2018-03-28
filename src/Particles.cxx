@@ -61,6 +61,72 @@ KLFitter::Particles::Particles() :
 }
 
 // ---------------------------------------------------------
+KLFitter::Particles::Particles(const KLFitter::Particles& obj) :
+  fPartons(new std::vector<TLorentzVector*>(0)),
+  fElectrons(new std::vector<TLorentzVector*>(0)),
+  fMuons(new std::vector<TLorentzVector*>(0)),
+  fTaus(new std::vector<TLorentzVector*>(0)),
+  fNeutrinos(new std::vector<TLorentzVector*>(0)),
+  fBosons(new std::vector<TLorentzVector*>(0)),
+  fPhotons(new std::vector<TLorentzVector*>(0)),
+
+  fNamePartons(new std::vector<std::string>{*obj.fNamePartons}),
+  fNameElectrons(new std::vector<std::string>(*obj.fNameElectrons)),
+  fNameMuons(new std::vector<std::string>(*obj.fNameMuons)),
+  fNameTaus(new std::vector<std::string>(*obj.fNameTaus)),
+  fNameNeutrinos(new std::vector<std::string>(*obj.fNameNeutrinos)),
+  fNameBosons(new std::vector<std::string>(*obj.fNameBosons)),
+  fNamePhotons(new std::vector<std::string>(*obj.fNamePhotons)),
+
+  fJetIndex(new std::vector<int>(*obj.fJetIndex)),
+  fElectronIndex(new std::vector<int>(*obj.fElectronIndex)),
+  fMuonIndex(new std::vector<int>(*obj.fMuonIndex)),
+  fPhotonIndex(new std::vector<int>(*obj.fPhotonIndex)),
+
+  fTrueFlavor(new std::vector<TrueFlavorType>(*obj.fTrueFlavor)),
+  fIsBTagged(new std::vector<bool>(*obj.fIsBTagged)),
+  fBTaggingEfficiency(new std::vector<double>(*obj.fBTaggingEfficiency)),
+  fBTaggingRejection(new std::vector<double>(*obj.fBTaggingRejection)),
+
+  fBTagWeight(new std::vector<double>(*obj.fBTagWeight)),
+  fBTagWeightSet(new std::vector<bool>(*obj.fBTagWeightSet)),
+
+  fElectronDetEta(new std::vector<double>(*obj.fElectronDetEta)),
+  fMuonDetEta(new std::vector<double>(*obj.fMuonDetEta)),
+  fJetDetEta(new std::vector<double>(*obj.fJetDetEta)),
+  fPhotonDetEta(new std::vector<double>(*obj.fPhotonDetEta)),
+  fElectronCharge(new std::vector<float>(*obj.fElectronCharge)),
+  fMuonCharge(new std::vector<float>(*obj.fMuonCharge)) {
+  for (const auto& ipar : *obj.fPartons) {
+    fPartons->emplace_back(new TLorentzVector(*ipar));
+  }
+
+  for (const auto& ipar : *obj.fElectrons) {
+    fElectrons->emplace_back(new TLorentzVector(*ipar));
+  }
+
+  for (const auto& ipar : *obj.fMuons) {
+    fMuons->emplace_back(new TLorentzVector(*ipar));
+  }
+
+  for (const auto& ipar : *obj.fTaus) {
+    fTaus->emplace_back(new TLorentzVector(*ipar));
+  }
+
+  for (const auto& ipar : *obj.fNeutrinos) {
+    fNeutrinos->emplace_back(new TLorentzVector(*ipar));
+  }
+
+  for (const auto& ipar : *obj.fBosons) {
+    fBosons->emplace_back(new TLorentzVector(*ipar));
+  }
+
+  for (const auto& ipar : *obj.fPhotons) {
+   fPhotons->emplace_back(new TLorentzVector(*ipar));
+  }
+}
+
+// ---------------------------------------------------------
 KLFitter::Particles::~Particles() {
   while (!fPartons->empty()) {
     TLorentzVector* lv = fPartons->front();
